@@ -42,11 +42,17 @@ spec:
       {{- with .Values.api_gateway.affinity }}
       affinity: {{ tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
+{{- if .Values.api_gateway.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.api_gateway.podSecurityContext "enabled" | toYaml | nindent 8 }}
+{{- end }}
 
       containers:
       - name: api-gateway
         image: {{ .Values.api_gateway.image.registry }}/{{ .Values.api_gateway.image.repository }}:{{ .Values.api_gateway.image.tag }}
         imagePullPolicy: {{ .Values.api_gateway.image.imagePullPolicy }}
+{{- if .Values.api_gateway.containerSecurityContext.enabled }}
+        securityContext: {{- omit .Values.api_gateway.containerSecurityContext "enabled" | toYaml | nindent 10 }}
+{{- end }}
         args:
             - --accesslog=true
             - --accesslog.format=json
