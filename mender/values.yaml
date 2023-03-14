@@ -49,6 +49,8 @@ mongodb:
     tag: "4.4.13-debian-10-r63"
   persistence:
     size: "8Gi"
+  auth:
+    rootPassword: changethismongodbrootpassword
 
 dataMigration:
   reindexReporting:
