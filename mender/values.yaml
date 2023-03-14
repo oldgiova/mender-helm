@@ -40,7 +40,7 @@ global:
 # Internal MongoDB integrated in the Helm Chart.
 # You can use this unless you have an external MongoDB setup
 mongodb:
-  enabled: true
+  enabled: false
   architecture: "replicaset"
   replicaCount: 2
   arbiter:
