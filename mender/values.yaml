@@ -37,6 +37,19 @@ global:
     SMTP_SSL: "false"
   url: "https://mender-api-gateway"
 
+# Internal MongoDB integrated in the Helm Chart.
+# You can use this unless you have an external MongoDB setup
+mongodb:
+  enabled: true
+  architecture: "replicaset"
+  replicaCount: 2
+  arbiter:
+    enabled: true
+  image:
+    tag: "4.4.13-debian-10-r63"
+  persistence:
+    size: "8Gi"
+
 dataMigration:
   reindexReporting:
     enable: true
