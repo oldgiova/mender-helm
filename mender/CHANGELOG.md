@@ -1,6 +1,6 @@
 # Mender Helm chart
 
-# version 0.0.1
+# version 10.0.1
 * New version scheme, not mender related
 * Included MongoDB as optional dependency
 
