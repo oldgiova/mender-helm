@@ -3,6 +3,7 @@
 # version 10.0.1
 * New version scheme, not mender related
 * Included MongoDB as optional dependency
+* Included NATS as optional dependency
 * added `_helpers.tpl` file
 
 # version 3.5.0
