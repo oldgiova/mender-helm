@@ -16,6 +16,8 @@ global:
     URLs: http://opensearch-cluster-master:9200
   storage: "aws"
   s3:
+    # if using GCS:
+    # AWS_URI: "https://storage.googleapis.com"
     AWS_URI: ""
     AWS_EXTERNAL_URI: ""
     AWS_BUCKET: mender-artifact-storage
