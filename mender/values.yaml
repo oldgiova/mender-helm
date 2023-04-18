@@ -74,6 +74,7 @@ ingress:
 mongodb:
   enabled: false
   architecture: standalone
+  useStatefulSet: true
   auth:
     enabled: false
   global:
