@@ -38,8 +38,7 @@ build:pipeline-toolbox-image:
 test:setup_eks_cluster:
   image: ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG}
   stage: .pre
-  dependencies:
-    - build:pipeline-toolbox-image
+  needs: ["build:pipeline-toolbox-image"]
   rules:
     - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests"'
   before_script:
