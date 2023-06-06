@@ -131,6 +131,7 @@ test:helm_chart_install:
 test:wip_helm_chart_install:
   image: ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG}
   stage: test
+  need: ["test:setup_eks_cluster"]
   rules:
     - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests"'
   before_script:
