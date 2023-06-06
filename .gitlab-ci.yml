@@ -17,7 +17,7 @@ include:
     file: '.gitlab-ci-github-status-updates.yml'
 
 preparation:
-  stage: preparation
+  stage: .pre
   image: docker:20.10.14-dind
   rules:
     - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests"'
@@ -25,7 +25,7 @@ preparation:
     - |
       docker build \
             --build-arg BUILDKIT_INLINE_CACHE=1 \
-            --cache-from ${PIPELINE_TOOLBOX_IMAGE} \
+            --cache-from ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG} \
             -t ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG} \
             -f tests/Dockerfile \
             tests/
