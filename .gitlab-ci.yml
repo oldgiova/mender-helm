@@ -1,6 +1,6 @@
 variables:
   KIND_VERSION: "0.19.0"
-  PIPELINE_TOOLBOX_TAG: "v1"
+  PIPELINE_TOOLBOX_TAG: "toolbox-v1"
 
 stages:
   - build
