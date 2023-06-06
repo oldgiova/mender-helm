@@ -35,6 +35,27 @@ build:pipeline-toolbox-image:
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
     - docker push ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG}
 
+test:setup_eks_cluster:
+  image: ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG}
+  stage: .pre
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests"'
+  script:
+    - echo "DEBUG - kubectl version - $(kubectl version --client)"
+    - echo "DEBUG - eksctl version - $(eksctl version)"
+    - echo "DEBUG - helm version - $(helm version)"
+    - echo "DEBUG - os version - $(cat /etc/os-release)"
+    - echo "DEBUG - this user - $(id)"
+    - echo "INFO - eks cluster setup"
+    - *eks_cluster_testing_vars
+    - eksctl create cluster helmtesting-${CI_PIPELINE_ID}
+    - echo "DEBUG - kubectl cluster version:"
+    - kubectl version
+  artifacts:
+    expire_in: 1d
+    paths:
+      - /root/.kube/config
+
 build:
   stage: build
   image: debian:buster
@@ -71,6 +92,11 @@ build:
   - export AWS_DEFAULT_REGION=$CI_JOBS_AWS_REGION_STAGING
   - aws eks --region $CI_JOBS_AWS_REGION_STAGING update-kubeconfig --name $CI_JOBS_AWS_EKS_CLUSTER_NAME_STAGING
   - kubectl config set-context --current --namespace=mender-helm-tests
+
+.eks_cluster_testing_vars &eks_cluster_testing_vars
+  - export AWS_ACCESS_KEY_ID=$CI_EKSCTL_ACCESS_KEY_ID_TEST
+  - export AWS_SECRET_ACCESS_KEY=$CI_EKSCTL_AWS_SECRET_ACCESS_KEY_TEST
+  - export AWS_DEFAULT_REGION=eu-central-1
 
 .setup_s3_helm_chart_repo: &setup_s3_helm_chart_repo
   # Configure AWS CLI for the S3 repository
@@ -109,13 +135,25 @@ test:wip_helm_chart_install:
   rules:
     - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests"'
   before_script:
-    - echo "DEBUG - before script"
+    - *eks_cluster_testing_vars
   script:
     - echo "DEBUG - kubectl version - $(kubectl version --client)"
     - echo "DEBUG - eksctl version - $(eksctl version)"
     - echo "DEBUG - helm version - $(helm version)"
     - echo "DEBUG - os version - $(cat /etc/os-release)"
     - echo "DEBUG - this user - $(id)"
+    - echo "INFO - installing helm from scratch"
+    - |
+      helm upgrade -i \
+        --debug \
+        mender-latest \
+        -f mender/values.yaml \
+        -f tests/keys.yaml \
+        -f tests/values.yaml \
+        --set global.image.username=${REGISTRY_MENDER_IO_USERNAME} \
+        --set global.image.password="${REGISTRY_MENDER_IO_PASSWORD}" \
+        --set global.s3.AWS_ACCESS_KEY_ID="${MINIO_accessKey}" \
+        --set global.s3.AWS_SECRET_ACCESS_KEY="${MINIO_secretKey}" ./mender
   after_script:
     - echo "DEBUG - cleanup"
 
@@ -140,3 +178,12 @@ publish:helm_chart_publishing:
     - helm repo add mender s3://${S3_HELM_CHART_REPO}
     - helm s3 push --acl="public-read" --relative --timeout=60s ./mender-*.tgz mender
     - aws cloudfront create-invalidation --distribution-id ${S3_HELM_CHART_CDN_DISTRIBUTION_ID} --paths "/*"
+
+test:cleanup_eks_cluster:
+  image: ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG}
+  stage: .post
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests"'
+  script:
+    - *eks_cluster_testing_vars
+    - eksctl delete cluster -n helmtesting-${CI_PIPELINE_ID}
