@@ -42,10 +42,12 @@ test:setup_eks_cluster:
   rules:
     - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests"'
   before_script:
+  script:
     - export AWS_ACCESS_KEY_ID=$CI_EKSCTL_ACCESS_KEY_ID_TEST
     - export AWS_SECRET_ACCESS_KEY=$CI_EKSCTL_AWS_SECRET_ACCESS_KEY_TEST
     - export AWS_DEFAULT_REGION=eu-central-1
-  script:
+    - echo "DEBUG - aws sts get-caller-identity"
+    - aws sts get-caller-identity
     - echo "DEBUG - kubectl version - $(kubectl version --client)"
     - echo "DEBUG - eksctl version - $(eksctl version)"
     - echo "DEBUG - helm version - $(helm version)"
@@ -181,7 +183,7 @@ publish:helm_chart_publishing:
     - helm s3 push --acl="public-read" --relative --timeout=60s ./mender-*.tgz mender
     - aws cloudfront create-invalidation --distribution-id ${S3_HELM_CHART_CDN_DISTRIBUTION_ID} --paths "/*"
 
-test:cleanup_eks_cluster:
+.eks_cleanup: &eks_cleanup
   image: ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG}
   stage: .post
   rules:
@@ -192,3 +194,11 @@ test:cleanup_eks_cluster:
     - export AWS_DEFAULT_REGION=eu-central-1
   script:
     - eksctl delete cluster -n helmtesting-${CI_PIPELINE_ID}
+
+test:cleanup_eks_cluster:failed:
+  when: on_failure
+  <<: *eks_cleanup
+
+test:cleanup_eks_cluster:success:
+  when: on_success
+  <<: *eks_cleanup
