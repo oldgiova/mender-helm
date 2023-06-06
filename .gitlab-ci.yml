@@ -195,10 +195,10 @@ publish:helm_chart_publishing:
   script:
     - eksctl delete cluster -n helmtesting-${CI_PIPELINE_ID}
 
-test:cleanup_eks_cluster:failed:
+cleanup_eks_cluster:failed:
   when: on_failure
   <<: *eks_cleanup
 
-test:cleanup_eks_cluster:success:
+cleanup_eks_cluster:success:
   when: on_success
   <<: *eks_cleanup
