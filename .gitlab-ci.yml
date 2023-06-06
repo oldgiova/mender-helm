@@ -19,6 +19,7 @@ build:pipeline-toolbox-image:
   tags:
     - mender-qa-worker-generic-light
   stage: .pre
+  image: docker
   services:
     - docker:dind
   rules:
