@@ -1,4 +1,9 @@
+variables:
+  KIND_VERSION: "0.19.0"
+  PIPELINE_TOOLBOX_TAG: "v1"
+
 stages:
+  - preparation
   - build
   - test
   - publish
@@ -10,6 +15,21 @@ include:
     file: '.gitlab-ci-check-license.yml'
   - project: 'Northern.tech/Mender/mendertesting'
     file: '.gitlab-ci-github-status-updates.yml'
+
+preparation:
+  stage: preparation
+  image: docker:20.10.14-dind
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests"'
+  script:
+    - |
+      docker build \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            --cache-from ${PIPELINE_TOOLBOX_IMAGE} \
+            -t ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG} \
+            -f tests/Dockerfile \
+            tests/
+    - docker push ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG}
 
 build:
   stage: build
@@ -78,6 +98,22 @@ test:helm_chart_install:
   after_script:
     - *setup_eks_cluster_staging
     - tests/ci-make-clean.sh
+
+test:wip_helm_chart_install:
+  image: ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG}
+  stage: test
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests"'
+  before_script:
+    - echo "DEBUG - before script"
+  script:
+    - echo "DEBUG - kubectl version - $(kubectl version --client)"
+    - echo "DEBUG - eksctl version - $(eksctl version)"
+    - echo "DEBUG - helm version - $(helm version)"
+    - echo "DEBUG - os version - $(cat /etc/os-release)"
+    - echo "DEBUG - this user - $(id)"
+  after_script:
+    - echo "DEBUG - cleanup"
 
 publish:helm_chart_publishing:
   rules:
