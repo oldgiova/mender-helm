@@ -61,7 +61,11 @@ test:setup_eks_cluster:
     - |
       eksctl create cluster \
         --name ${EKS_CLUSTER_NAME} \
-        --tags "env=helm-ci-test"
+        --tags "env=helm-ci-test" \
+        --asg-access \
+    --spot \
+    --instance-types m6a.xlarge,t3.xlarge \
+    --nodes 4
     - eksctl create iamidentitymapping --cluster ${EKS_CLUSTER_NAME} --arn arn:aws:iam::017659451055:role/AWSReservedSSO_AdministratorAccess_d80c0803237d713a --username "admin:{{SessionName}}" --group "system:masters" --no-duplicate-arns
     - eksctl create iamidentitymapping --cluster ${EKS_CLUSTER_NAME} --arn arn:aws:iam::017659451055:role/AWSReservedSSO_PowerUserAccess_28a0f819b31196fb --username "admin:{{SessionName}}" --group "system:masters" --no-duplicate-arns
     - eksctl create iamidentitymapping --cluster ${EKS_CLUSTER_NAME} --arn arn:aws:iam::017659451055:role/AWSReservedSSO_EKSAccess_8c2574e21d9fc21c --username "admin:{{SessionName}}" --group "system:masters" --no-duplicate-arns
