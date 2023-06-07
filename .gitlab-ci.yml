@@ -167,7 +167,7 @@ test:wip_helm_chart_install:
     - tests/ci-make-deps.sh
     - |
       echo "INFO - installing mender"
-      helm install mender \
+      helm upgrade -i mender \
         -f mender/values.yaml \
         -f tests/keys.yaml \
         -f tests/values-helmci.yaml \
@@ -175,6 +175,9 @@ test:wip_helm_chart_install:
         --set global.image.password="${REGISTRY_MENDER_IO_PASSWORD}" \
         --set global.s3.AWS_ACCESS_KEY_ID="${MINIO_accessKey}" \
         --set global.s3.AWS_SECRET_ACCESS_KEY="${MINIO_secretKey}" \
+        --atomic \
+        --create-namespace \
+        --namespace mender-setup-test \
         ./mender || exit 3;
     - make test
 
@@ -202,7 +205,7 @@ test:wip_helm_chart_upgrade:
     - tests/ci-make-deps.sh
     - |
       echo "INFO - installing mender 3.3"
-      helm install mender \
+      helm upgrade -i mender \
         -f mender/values.yaml \
         -f tests/keys.yaml \
         -f tests/values-helmci.yaml \
@@ -211,6 +214,9 @@ test:wip_helm_chart_upgrade:
         --set global.image.password="${REGISTRY_MENDER_IO_PASSWORD}" \
         --set global.s3.AWS_ACCESS_KEY_ID="${MINIO_accessKey}" \
         --set global.s3.AWS_SECRET_ACCESS_KEY="${MINIO_secretKey}" \
+        --atomic \
+        --create-namespace \
+        --namespace mender-upgrade-test \
         mender/mender || exit 3;
     - make test
 
