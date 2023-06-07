@@ -23,6 +23,7 @@ RUN apt-get update && \
        python3 \
        python3-pip \
        jq \
+       unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # workdir
