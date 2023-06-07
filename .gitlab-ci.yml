@@ -60,10 +60,6 @@ test:setup_eks_cluster:
         --tags "env=helmtestingci"
     - echo "DEBUG - kubectl cluster version:"
     - kubectl version
-  artifacts:
-    expire_in: 1d
-    paths:
-      - /root/.kube/config
 
 build:
   stage: build
@@ -152,7 +148,6 @@ test:wip_helm_chart_install:
     - echo "DEBUG - os version - $(cat /etc/os-release)"
     - echo "DEBUG - this user - $(id)"
     - echo "DEBUG - kubeconfig file:"
-    - cat /root/.kube/config || exit 0
     - eksctl utils write-kubeconfig --cluster=helmtesting-${CI_PIPELINE_ID}
     - echo "DEBUG - get kubectl nodes"
     - kubectl config current-context
