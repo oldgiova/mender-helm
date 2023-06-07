@@ -54,7 +54,10 @@ test:setup_eks_cluster:
     - echo "DEBUG - os version - $(cat /etc/os-release)"
     - echo "DEBUG - this user - $(id)"
     - echo "INFO - eks cluster setup"
-    - eksctl create cluster helmtesting-${CI_PIPELINE_ID}
+    - |
+      eksctl create cluster \
+        -n helmtesting-${CI_PIPELINE_ID} \
+        --tags "env=helmtestingci"
     - echo "DEBUG - kubectl cluster version:"
     - kubectl version
   artifacts:
@@ -134,6 +137,8 @@ test:wip_helm_chart_install:
   image: ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG}
   stage: test
   needs: ["test:setup_eks_cluster"]
+  dependencies:
+    - test:setup_eks_cluster
   rules:
     - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests"'
   before_script:
