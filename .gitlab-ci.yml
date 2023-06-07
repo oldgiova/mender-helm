@@ -151,6 +151,12 @@ test:wip_helm_chart_install:
     - echo "DEBUG - helm version - $(helm version)"
     - echo "DEBUG - os version - $(cat /etc/os-release)"
     - echo "DEBUG - this user - $(id)"
+    - echo "DEBUG - kubeconfig file:"
+    - cat /root/.kube/config || exit 0
+    - eksctl utils write-kubeconfig --cluster=helmtesting-${CI_PIPELINE_ID}
+    - echo "DEBUG - get kubectl nodes"
+    - kubectl config current-context
+    - kubectl get nodes
     - echo "INFO - installing helm from scratch"
     - |
       helm upgrade -i \
