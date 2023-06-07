@@ -31,10 +31,10 @@ build:pipeline-toolbox-image:
             --build-arg BUILDKIT_INLINE_CACHE=1 \
             --cache-from ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG} \
             -t ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG} \
-            -f tests/Dockerfile \
             --build-arg KUBECTL_VERSION=${CI_KUBECTL_VERSION} \
             --build-arg HELM_VERSION=${CI_HELM_VERSION} \
             --build-arg KUBECONFORM_VERSION=${CI_KUBECONFORM_VERSION} \
+            -f tests/Dockerfile \
             tests/
     - docker push ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG}
 

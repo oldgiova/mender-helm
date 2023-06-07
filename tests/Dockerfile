@@ -23,7 +23,6 @@ RUN apt-get update && \
        python3 \
        python3-pip \
        jq \
-       awscli \
     && rm -rf /var/lib/apt/lists/*
 
 # workdir
@@ -67,6 +66,12 @@ RUN ARCH=amd64 \
 RUN curl -fsSL -o /tmp/kubeconform.tar.gz https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz \
     && tar -xzf /tmp/kubeconform.tar.gz -C ${BIN_DIR} \
     && rm /tmp/kubeconform.tar.gz
+
+# awscli install
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install \
+    && aws --version
 
 #USER ${USER}
 ENV PATH="${BIN_DIR}:${PATH}"
