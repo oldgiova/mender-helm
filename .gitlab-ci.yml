@@ -60,6 +60,7 @@ test:setup_eks_cluster:
     - |
       eksctl create cluster \
         -n helmtesting-${CI_PIPELINE_ID} \
+        -f tests/eks-cluster-config-basic.yaml
         --tags "env=helmtestingci"
     - echo "DEBUG - kubectl cluster version:"
     - kubectl version

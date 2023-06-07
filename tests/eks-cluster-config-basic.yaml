@@ -1,0 +1,30 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: helmtestci
+  region: eu-central-1
+
+iamIdentityMappings:
+  - arn: arn:aws:iam::017659451055:role/aws-reserved/sso.amazonaws.com/eu-central-1/AWSReservedSSO_EKSAccess_8c2574e21d9fc21c
+    groups:
+      - system:masters
+    username: admin-eksaccess
+    noDuplicateARNs: true # prevents shadowing of ARNs
+
+  - arn: arn:aws:iam::017659451055:role/aws-reserved/sso.amazonaws.com/eu-central-1/AWSReservedSSO_AdministratorAccess_d80c0803237d713a
+    groups:
+      - system:masters
+    username: admin
+    noDuplicateARNs: true # prevents shadowing of ARNs
+
+  - arn: arn:aws:iam::017659451055:role/aws-reserved/sso.amazonaws.com/eu-central-1/AWSReservedSSO_PowerUserAccess_28a0f819b31196fb
+    groups:
+      - system:masters
+    username: admin-poweruser
+    noDuplicateARNs: true # prevents shadowing of ARNs
+
+
+  - account: "017659451055" # account must be configured with no other options
+
