@@ -57,9 +57,9 @@ test:setup_eks_cluster:
     - echo "DEBUG - os version - $(cat /etc/os-release)"
     - echo "DEBUG - this user - $(id)"
     - echo "INFO - eks cluster setup"
+    - sed -i "s/helmtestci/helmtesting-${CI_PIPELINE_ID/" tests/eks-cluster-config-basic.yaml
     - |
       eksctl create cluster \
-        -n helmtesting-${CI_PIPELINE_ID} \
         -f tests/eks-cluster-config-basic.yaml
         --tags "env=helmtestingci"
     - echo "DEBUG - kubectl cluster version:"
