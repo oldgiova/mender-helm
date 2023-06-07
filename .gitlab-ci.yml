@@ -149,7 +149,6 @@ test:wip_helm_chart_install:
     - export AWS_ACCESS_KEY_ID=$CI_EKSCTL_ACCESS_KEY_ID_TEST
     - export AWS_SECRET_ACCESS_KEY=$CI_EKSCTL_AWS_SECRET_ACCESS_KEY_TEST
     - export AWS_DEFAULT_REGION=eu-central-1
-    - kubectl config set-context --current --namespace=mender-setup-test
     - echo "DEBUG - kubectl version - $(kubectl version --client)"
     - echo "DEBUG - eksctl version - $(eksctl version)"
     - echo "DEBUG - helm version - $(helm version)"
@@ -157,6 +156,7 @@ test:wip_helm_chart_install:
     - echo "DEBUG - this user - $(id)"
     - echo "DEBUG - kubeconfig file:"
     - eksctl utils write-kubeconfig --cluster=${EKS_CLUSTER_NAME}
+    - kubectl config set-context --current --namespace=mender-setup-test
     - echo "DEBUG - get kubectl nodes"
     - kubectl config current-context
     - kubectl get nodes
@@ -191,8 +191,8 @@ test:wip_helm_chart_upgrade:
     - export AWS_ACCESS_KEY_ID=$CI_EKSCTL_ACCESS_KEY_ID_TEST
     - export AWS_SECRET_ACCESS_KEY=$CI_EKSCTL_AWS_SECRET_ACCESS_KEY_TEST
     - export AWS_DEFAULT_REGION=eu-central-1
-    - kubectl config set-context --current --namespace=mender-upgrade-test
     - eksctl utils write-kubeconfig --cluster=${EKS_CLUSTER_NAME}
+    - kubectl config set-context --current --namespace=mender-upgrade-test
     - echo "DEBUG - get kubectl nodes"
     - kubectl config current-context
     - kubectl get nodes
