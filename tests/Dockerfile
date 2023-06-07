@@ -24,6 +24,8 @@ RUN apt-get update && \
        python3-pip \
        jq \
        unzip \
+       make \
+       uuid-runtime \
     && rm -rf /var/lib/apt/lists/*
 
 # workdir
