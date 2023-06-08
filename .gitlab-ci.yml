@@ -319,7 +319,5 @@ cleanup_eks_cluster:success:
 
 cleanup_eks_cluster:failed:manual:
   when: manual
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests" && $SKIP_CLEANUP == "true"'
   <<: *eks_cleanup
 
