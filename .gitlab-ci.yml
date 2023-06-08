@@ -169,6 +169,8 @@ test:wip_helm_chart_install:
     - tests/ci-deps-k8s.sh
   script:
     - tests/ci-make-deps.sh
+    - source ./tests/variables
+    - echo "DEBUG - minio access key: ${MINIO_accessKey}"
     - |
       echo "INFO - installing mender"
       helm upgrade -i mender \
@@ -206,6 +208,7 @@ test:wip_helm_chart_upgrade_from3.3:
     - tests/ci-deps-k8s.sh
   script:
     - tests/ci-make-deps.sh
+    - source ./tests/variables
     - |
       echo "INFO - installing mender 3.3"
       helm upgrade -i mender \
@@ -244,6 +247,7 @@ test:wip_helm_chart_upgrade_from3.4:
     - tests/ci-deps-k8s.sh
   script:
     - tests/ci-make-deps.sh
+    - source ./tests/variables
     - |
       echo "INFO - installing mender 3.4"
       helm upgrade -i mender \
