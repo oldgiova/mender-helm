@@ -180,7 +180,6 @@ test:wip_helm_chart_install:
         --set global.image.password="${REGISTRY_MENDER_IO_PASSWORD}" \
         --set global.s3.AWS_ACCESS_KEY_ID="${MINIO_accessKey}" \
         --set global.s3.AWS_SECRET_ACCESS_KEY="${MINIO_secretKey}" \
-        --create-namespace \
         --namespace mender-setup-test \
         ./mender || exit 3;
     - make test
@@ -198,7 +197,7 @@ test:wip_helm_chart_upgrade_from3.3:
     - export AWS_SECRET_ACCESS_KEY=$CI_EKSCTL_AWS_SECRET_ACCESS_KEY_TEST
     - export AWS_DEFAULT_REGION=eu-central-1
     - eksctl utils write-kubeconfig --cluster=${EKS_CLUSTER_NAME}
-    - kubectl create ns mender-upgrade-test
+    - kubectl create ns mender-upgrade-test-3-3
     - kubectl config set-context --current --namespace=mender-upgrade-test-3-3
     - echo "DEBUG - get kubectl nodes"
     - kubectl config current-context
@@ -219,7 +218,6 @@ test:wip_helm_chart_upgrade_from3.3:
         --set global.image.password="${REGISTRY_MENDER_IO_PASSWORD}" \
         --set global.s3.AWS_ACCESS_KEY_ID="${MINIO_accessKey}" \
         --set global.s3.AWS_SECRET_ACCESS_KEY="${MINIO_secretKey}" \
-        --create-namespace \
         --namespace mender-upgrade-test-3-3 \
         mender/mender || exit 3;
     - make test
@@ -237,7 +235,7 @@ test:wip_helm_chart_upgrade_from3.4:
     - export AWS_SECRET_ACCESS_KEY=$CI_EKSCTL_AWS_SECRET_ACCESS_KEY_TEST
     - export AWS_DEFAULT_REGION=eu-central-1
     - eksctl utils write-kubeconfig --cluster=${EKS_CLUSTER_NAME}
-    - kubectl create ns mender-upgrade-test
+    - kubectl create ns mender-upgrade-test-3-4
     - kubectl config set-context --current --namespace=mender-upgrade-test-3-4
     - echo "DEBUG - get kubectl nodes"
     - kubectl config current-context
@@ -258,7 +256,6 @@ test:wip_helm_chart_upgrade_from3.4:
         --set global.image.password="${REGISTRY_MENDER_IO_PASSWORD}" \
         --set global.s3.AWS_ACCESS_KEY_ID="${MINIO_accessKey}" \
         --set global.s3.AWS_SECRET_ACCESS_KEY="${MINIO_secretKey}" \
-        --create-namespace \
         --namespace mender-upgrade-test-3-4 \
         mender/mender || exit 3;
     - make test
@@ -274,7 +271,6 @@ test:wip_helm_chart_upgrade_from3.4:
         --set global.image.password="${REGISTRY_MENDER_IO_PASSWORD}" \
         --set global.s3.AWS_ACCESS_KEY_ID="${MINIO_accessKey}" \
         --set global.s3.AWS_SECRET_ACCESS_KEY="${MINIO_secretKey}" \
-        --create-namespace \
         --namespace mender-upgrade-test-3-4 \
         ./mender || exit 3;
     - make test
