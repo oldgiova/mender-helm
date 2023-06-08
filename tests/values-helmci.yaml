@@ -3,3 +3,4 @@ global:
     URL: mongodb://mender-mongo-mongodb
   s3:
     AWS_URI: http://mender-minio:9000
+    AWS_REGION: eu-central-1
