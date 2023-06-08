@@ -301,7 +301,7 @@ publish:helm_chart_publishing:
   image: ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG}
   stage: .post
   rules:
-    - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests"'
+    - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests" && $SKIP_CLEANUP != "true"'
   before_script:
     - export AWS_ACCESS_KEY_ID=$CI_EKSCTL_ACCESS_KEY_ID_TEST
     - export AWS_SECRET_ACCESS_KEY=$CI_EKSCTL_AWS_SECRET_ACCESS_KEY_TEST
@@ -316,3 +316,10 @@ cleanup_eks_cluster:failed:
 cleanup_eks_cluster:success:
   when: on_success
   <<: *eks_cleanup
+
+cleanup_eks_cluster:failed:manual:
+  when: manual
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests" && $SKIP_CLEANUP == "true"'
+  <<: *eks_cleanup
+
