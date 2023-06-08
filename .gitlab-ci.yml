@@ -296,7 +296,7 @@ test:wip_kubeconform_tests:
           -f tests/keys.yaml \
           -f tests/values-helmci.yaml \
           --kube-version ${full_version} \
-        | kubeconform --kubernetes-version ${full_version} \
+        | kubeconform --kubernetes-version ${full_version}
       done < <(eksctl version -o json | jq -r '.EKSServerSupportedVersions[]')
     - | 
       echo "DEBUG - run failed kubeconform tests: this should fail"
