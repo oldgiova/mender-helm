@@ -276,6 +276,43 @@ test:wip_helm_chart_upgrade_from3.4:
         ./mender || exit 3;
     - make test
 
+test:wip_kubeconform_tests:
+  image: ${CI_REGISTRY_IMAGE}:${PIPELINE_TOOLBOX_TAG}
+  stage: test
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "MC-6865-helm-upgrade-tests"'
+  before_script:
+    - export AWS_ACCESS_KEY_ID=$CI_EKSCTL_ACCESS_KEY_ID_TEST
+    - export AWS_SECRET_ACCESS_KEY=$CI_EKSCTL_AWS_SECRET_ACCESS_KEY_TEST
+    - export AWS_DEFAULT_REGION=eu-central-1
+  script:
+    - |
+      echo "INFO - running kubeconform tests:"
+      while IFS= read -r version; do
+        full_version=${version}.0
+        echo "INFO - testing version ${full_version}"
+        helm template mender/ \
+          -f mender/values.yaml \
+          -f tests/keys.yaml \
+          -f tests/values-helmci.yaml \
+          --kube-version ${full_version} \
+        | kubeconform --kubernetes-version ${full_version} \
+      done < <(eksctl version -o json | jq -r '.EKSServerSupportedVersions[]')
+    - | 
+      echo "DEBUG - run failed kubeconform tests: this should fail"
+      sed -i 's/apps\/v1/fakeapps\/v42/' mender/templates/gui-deploy.yaml
+      while IFS= read -r version; do
+        full_version=${version}.0
+        echo "INFO - testing version ${full_version}"
+        helm template mender/ \
+          -f mender/values.yaml \
+          -f tests/keys.yaml \
+          -f tests/values-helmci.yaml \
+          --kube-version ${full_version} \
+        | kubeconform --kubernetes-version ${full_version} \
+        || echo "INFO - test failed with version ${kubeversion}: this is expected"
+      done < <(eksctl version -o json | jq -r '.EKSServerSupportedVersions[]')
+
 publish:helm_chart_publishing:
   rules:
     - if: '$CI_COMMIT_TAG'
