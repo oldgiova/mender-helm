@@ -5,12 +5,6 @@ global:
   hosted: false
   auditlogs: true
   priorityClassName: ""
-  image:
-    registry: registry.mender.io
-    username: null
-    password: null
-    tag: mender-3.7.7
-
   mongodb:
     existingSecret: ""
     URL: mongodb://mongodb
@@ -60,6 +54,16 @@ default:
   affinity: {}
   tolerations: {}
 
+  # The default.image depends on the state of `global.enterprise`:
+  # If true:  registry.mender.io/mender-server-enterprise
+  # If false: docker.io/mendersoftware
+  # The tag defaults to the chart version.
+  # image:
+  #   registry: docker.io|registry.mender.io
+  #   repository: mendersoftware|mender-server-enterprise
+  #   tag: {{ .Chart.AppVersion }}
+  #   pullPolicy: IfNotPresent
+
   # HorizontalPodAutoscaler default resources
   hpa: {}
   # enabled: true
@@ -97,7 +101,8 @@ default:
       maxUnavailable: 0
 
   # Override the properties of the Readiness and Liveness probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 1
     # successThreshold: 1
     # failureThreshold: 3
@@ -137,7 +142,6 @@ ingress:
     - secretName: mender-ingress-tls
       hosts:
         - mender.example.org
-
 
 # Helm chart smoke tests
 tests:
@@ -290,7 +294,8 @@ api_gateway:
   # prometheus pod monitor
   podMonitor:
     enabled: false
-    customLabels: {}
+    customLabels:
+      {}
       # prometheus-operated: "true"
 
   # Override the properties of the Readiness, Liveness and Startup probes
@@ -317,10 +322,10 @@ deployments:
     jitter: "3s"
     skipVerify: false
   daemonSchedule: "15 * * * *"
-  image:
-    registry: ""
-    repository: ""
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   service:
@@ -373,7 +378,8 @@ deployments:
   #     maxUnavailable: 25%
 
   # Override the properties of the Readiness, Liveness and Startup probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 2
     # successThreshold: 2
     # failureThreshold: 6
@@ -391,10 +397,10 @@ device_auth:
       cpu: 350m
       memory: 128Mi
   affinity: {}
-  image:
-    registry: ""
-    repository: ""
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   service:
@@ -459,7 +465,8 @@ device_auth:
   #     maxUnavailable: 25%
 
   # Override the properties of the Readiness, Liveness and Startup probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 2
     # successThreshold: 2
     # failureThreshold: 6
@@ -494,10 +501,11 @@ generate_delta_worker:
       cpu: 100m
       memory: 128Mi
   affinity: {}
-  image:
-    registry: registry.mender.io
-    repository: mendersoftware/generate-delta-worker
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   tag: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   priorityClassName: ""
@@ -526,10 +534,11 @@ gui:
       cpu: 5m
       memory: 16Mi
   affinity: {}
-  image:
-    registry: docker.io
-    repository: mendersoftware/gui
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: docker.io
+  #   repository: mendersoftware/gui
+  #   tag: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   service:
@@ -562,7 +571,8 @@ gui:
   #     maxUnavailable: 25%
 
   # Override the properties of the Readiness, Liveness and Startup probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 2
     # successThreshold: 2
     # failureThreshold: 6
@@ -584,10 +594,11 @@ inventory:
       cpu: 300m
       memory: 128Mi
   affinity: {}
-  image:
-    registry: ""
-    repository: ""
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   tag: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   service:
@@ -638,7 +649,8 @@ inventory:
   #   value: DEBUG
 
   # Override the properties of the Readiness, Liveness and Startup probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 2
     # successThreshold: 2
     # failureThreshold: 6
@@ -655,10 +667,11 @@ tenantadm:
       cpu: 150m
       memory: 64Mi
   affinity: {}
-  image:
-    registry: registry.mender.io
-    repository: mendersoftware/tenantadm
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   tag: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   service:
@@ -724,7 +737,8 @@ tenantadm:
   #     maxUnavailable: 25%
 
   # Override the properties of the Readiness, Liveness and Startup probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 2
     # successThreshold: 2
     # failureThreshold: 6
@@ -742,10 +756,11 @@ useradm:
       cpu: 150m
       memory: 64Mi
   affinity: {}
-  image:
-    registry: ""
-    repository: ""
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   tag: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   service:
@@ -810,7 +825,8 @@ useradm:
   #     maxUnavailable: 25%
 
   # Override the properties of the Readiness, Liveness and Startup probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 2
     # successThreshold: 2
     # failureThreshold: 6
@@ -828,10 +844,11 @@ workflows:
       cpu: 10m
       memory: 64Mi
   affinity: {}
-  image:
-    registry: ""
-    repository: ""
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   tag: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   service:
@@ -892,11 +909,11 @@ workflows:
   #       secretName: my-credential-file
 
   # Override the properties of the Readiness, Liveness and Startup probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 2
     # successThreshold: 2
     # failureThreshold: 6
-
 
 create_artifact_worker:
   enabled: true
@@ -911,10 +928,11 @@ create_artifact_worker:
       cpu: 100m
       memory: 128Mi
   affinity: {}
-  image:
-    registry: docker.io
-    repository: mendersoftware/create-artifact-worker
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   tag: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   podSecurityContext:
@@ -955,10 +973,11 @@ auditlogs:
       cpu: 50m
       memory: 128Mi
   affinity: {}
-  image:
-    registry: registry.mender.io
-    repository: mendersoftware/auditlogs
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   tag: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   service:
@@ -1007,7 +1026,8 @@ auditlogs:
   #     maxUnavailable: 25%
 
   # Override the properties of the Readiness, Liveness and Startup probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 2
     # successThreshold: 2
     # failureThreshold: 6
@@ -1025,10 +1045,11 @@ iot_manager:
       cpu: 50m
       memory: 128Mi
   affinity: {}
-  image:
-    registry: docker.io
-    repository: mendersoftware/iot-manager
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   tag: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   service:
@@ -1082,7 +1103,8 @@ iot_manager:
     existingSecret: ""
 
   # Override the properties of the Readiness, Liveness and Startup probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 2
     # successThreshold: 2
     # failureThreshold: 6
@@ -1100,10 +1122,11 @@ deviceconnect:
       cpu: 100m
       memory: 128Mi
   affinity: {}
-  image:
-    registry: docker.io
-    repository: mendersoftware/deviceconnect
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   tag: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   service:
@@ -1154,7 +1177,8 @@ deviceconnect:
   #     maxUnavailable: 25%
 
   # Override the properties of the Readiness, Liveness and Startup probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 2
     # successThreshold: 2
     # failureThreshold: 6
@@ -1172,10 +1196,11 @@ deviceconfig:
       cpu: 100m
       memory: 128Mi
   affinity: {}
-  image:
-    registry: docker.io
-    repository: mendersoftware/deviceconfig
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   tag: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   service:
@@ -1224,7 +1249,8 @@ deviceconfig:
   #     maxUnavailable: 25%
 
   # Override the properties of the Readiness, Liveness and Startup probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 2
     # successThreshold: 2
     # failureThreshold: 6
@@ -1242,10 +1268,10 @@ devicemonitor:
       cpu: 100m
       memory: 128Mi
   affinity: {}
-  image:
-    registry: registry.mender.io
-    repository: mendersoftware/devicemonitor
-    imagePullPolicy: IfNotPresent
+  # image:
+  #   registry: ""
+  #   repository: ""
+  #   pullPolicy: IfNotPresent
   imagePullSecrets: []
   nodeSelector: {}
   service:
@@ -1297,7 +1323,8 @@ devicemonitor:
   #     maxUnavailable: 25%
 
   # Override the properties of the Readiness, Liveness and Startup probes
-  probesOverrides: {}
+  probesOverrides:
+    {}
     # timeoutSeconds: 2
     # successThreshold: 2
     # failureThreshold: 6
