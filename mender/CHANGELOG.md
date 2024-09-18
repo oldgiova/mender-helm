@@ -22,6 +22,7 @@
   * The new `default.image` is used as default image for all Mender components
 * All default values for service level `image` values have been unset
   * The image is resolved from `default.image`
+* `tenantadm.certs.key` is no longer required.
 
 ## 5.11.0 - 2024-10-14
 
