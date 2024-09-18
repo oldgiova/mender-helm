@@ -23,6 +23,8 @@
 * All default values for service level `image` values have been unset
   * The image is resolved from `default.image`
 * `tenantadm.certs.key` is no longer required.
+* Autogenerate missing required secrets.
+  * `device_auth.certs.key` and `useradm.certs.key` are automatically generated if value is missing.
 
 ## 5.11.0 - 2024-10-14
 
