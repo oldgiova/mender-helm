@@ -50,6 +50,7 @@ include:
     file: '.gitlab-ci-github-status-updates.yml'
   - project: 'Northern.tech/Mender/mendertesting'
     file: '.gitlab-ci-check-helm-version-bump.yml'
+    ref: QA-760-mender-helm-version-bump-monorepo
 
 .set_eks_helmci_vars: &set_eks_helmci_vars
   - export AWS_DEFAULT_REGION=eu-central-1
