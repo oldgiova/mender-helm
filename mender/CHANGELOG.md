@@ -34,6 +34,7 @@
   * `redis.username`, `redis.password`, `redis.addr`
   * These have all been replaced by the redis connection string format:
   * `redis://<username>:<password>@addr[/<db>]`
+* Requires helm >= 3.10.0
 
 ## 5.11.0 - 2024-10-14
 
