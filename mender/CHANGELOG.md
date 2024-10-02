@@ -29,6 +29,7 @@
   * `device_auth.certs.key` and `useradm.certs.key` are automatically generated if value is missing.
 * Changed gui httpPort default from privileged 80 to unpriviliged 8090
 * Changed default `api_gateway.env.SSL` to `false`
+* Changed default `global.enterprise` to `false`
 
 ## 5.11.0 - 2024-10-14
 
